@@ -608,8 +608,9 @@ export function useUploader(options: {
 
 	async function preprocessForVideo(item: UploaderItem): Promise<void> {
 		let preprocessedFile: Blob | File = item.file;
+		item.compressionLevel=3;//extra;
 
-		const needsCompress = item.compressionLevel !== 0 && VIDEO_COMPRESSION_SUPPORTED_TYPES.includes(preprocessedFile.type);
+		const needsCompress = /*extra item.compressionLevel !== 0 && */VIDEO_COMPRESSION_SUPPORTED_TYPES.includes(preprocessedFile.type);
 
 		if (needsCompress) {
 			const mediabunny = await import('mediabunny');
@@ -630,8 +631,10 @@ export function useUploader(options: {
 				input,
 				output,
 				video: {
+					codec: 'av1', //extra
 					//width: 320, // Height will be deduced automatically to retain aspect ratio
-					bitrate: item.compressionLevel === 1 ? mediabunny.QUALITY_VERY_HIGH : item.compressionLevel === 2 ? mediabunny.QUALITY_MEDIUM : mediabunny.QUALITY_VERY_LOW,
+					//bitrate: item.compressionLevel === 1 ? mediabunny.QUALITY_VERY_HIGH : item.compressionLevel === 2 ? mediabunny.QUALITY_MEDIUM : mediabunny.QUALITY_VERY_LOW,
+					bitrate: mediabunny.QUALITY_VERY_LOW,
 				},
 				audio: {
 					// Explicitly keep audio (don't discard) and copy it if possible
